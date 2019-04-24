@@ -1,0 +1,29 @@
+{
+    "name": "aslong/aliyun-oss",
+    "description": "",
+    "homepage": "https://github.com/cjango/aliyun-oss",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "C.Jason",
+            "email": "chenjxlg@163.com",
+            "homepage": "https://www.cjango.com/"
+        }
+    ],
+    "require": {
+        "aliyuncs/oss-sdk-php": "~2.0",
+        "laravel/framework": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "AsLong\\OSS\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AsLong\\OSS\\ServiceProvider"
+            ]
+        }
+    }
+}
