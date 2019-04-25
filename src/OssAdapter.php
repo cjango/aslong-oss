@@ -478,6 +478,7 @@ class OssAdapter extends AbstractAdapter
     }
 
     /**
+     * 获取文件URL地址
      * @param $path
      * @return string
      */
@@ -491,7 +492,7 @@ class OssAdapter extends AbstractAdapter
     }
 
     /**
-     * Normalize a result from OSS.
+     * 基础的信息返回
      * @param array  $object
      * @param string $path
      * @return array file metadata
@@ -535,7 +536,7 @@ class OssAdapter extends AbstractAdapter
     }
 
     /**
-     * Retrieve options from a Config instance. done
+     * 获取配置
      * @param Config $config
      * @return array
      */
