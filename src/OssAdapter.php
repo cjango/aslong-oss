@@ -81,17 +81,15 @@ class OssAdapter extends AbstractAdapter
      * @param null      $prefix
      * @param array     $options
      */
-    public function __construct(OssClient $client, $bucket, $endPoint, $ssl, $isCname = false, $debug = false, $cdnDomain, $prefix = null, array $options = [])
+    public function __construct(OssClient $client, $bucket, $endPoint, $ssl, $isCname = false, $debug = false, $cdnDomain)
     {
-        $this->debug  = $debug;
-        $this->client = $client;
-        $this->bucket = $bucket;
-        $this->setPathPrefix($prefix);
+        $this->debug     = $debug;
+        $this->client    = $client;
+        $this->bucket    = $bucket;
         $this->endPoint  = $endPoint;
         $this->ssl       = $ssl;
         $this->isCname   = $isCname;
         $this->cdnDomain = $cdnDomain;
-        $this->options   = array_merge($this->options, $options);
     }
 
     /**
@@ -131,6 +129,7 @@ class OssAdapter extends AbstractAdapter
         if (!isset($options[OssClient::OSS_CONTENT_TYPE])) {
             $options[OssClient::OSS_CONTENT_TYPE] = Util::guessMimeType($path, $contents);
         }
+
         try {
             $this->client->putObject($this->bucket, $object, $contents, $options);
         } catch (OssException $e) {
@@ -159,7 +158,6 @@ class OssAdapter extends AbstractAdapter
      * @param string $path
      * @param string $contents
      * @param Config $config Config object
-     *
      * @return array|false false on failure file meta data on success
      */
     public function update($path, $contents, Config $config)
@@ -172,12 +170,10 @@ class OssAdapter extends AbstractAdapter
     }
 
     /**
-     * Update a file using a stream.
-     *
+     * 使用stream更新文件
      * @param string $path
      * @param resource $resource
      * @param Config $config Config object
-     *
      * @return array|false false on failure file meta data on success
      */
     public function updateStream($path, $resource, Config $config)
@@ -489,6 +485,18 @@ class OssAdapter extends AbstractAdapter
         }
 
         return ($this->ssl ? 'https://' : 'http://') . ($this->isCname ? ($this->cdnDomain == '' ? $this->endPoint : $this->cdnDomain) : $this->bucket . '.' . $this->endPoint) . '/' . ltrim($path, '/');
+    }
+
+    /**
+     * The the ACL visibility.
+     * @param string $path
+     * @return string
+     */
+    protected function getObjectACL($path)
+    {
+        $metadata = $this->getVisibility($path);
+
+        return $metadata['visibility'] === AdapterInterface::VISIBILITY_PUBLIC ? OssClient::OSS_ACL_TYPE_PUBLIC_READ : OssClient::OSS_ACL_TYPE_PRIVATE;
     }
 
     /**
